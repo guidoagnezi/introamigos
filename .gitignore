@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-save/
+saves/
 
 # Distribution / packaging
 .Python
