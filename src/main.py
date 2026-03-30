@@ -12,19 +12,23 @@ class Game():
     def __init__(self):
         self.janela = pygame.display.set_mode((LARGURA, ALTURA))
         self.clock = pygame.time.Clock()
+        self.save_file : SaveFile = None
         pygame.init()
 
-        self.cena_atual = CenaAcampamento(self)
+        self.cena_atual = CenaTitulo(self)
 
     def setCena(self, cena):
-        self.cena_atual = cena 
+        self.cena_atual = cena
+
     def run(self):
         while True:
             self.clock.tick(FPS)
             
             for event in pygame.event.get():
+
                 if event.type == pygame.QUIT:
                     pygame.quit()
+
                 self.cena_atual.handle_events(event)
 
             self.cena_atual.update()

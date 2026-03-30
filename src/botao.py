@@ -6,7 +6,7 @@ class Botao:
         self.y = y
 
         self.fonte = fonte
-        self.texto = texto
+        self.texto : str = texto
         self.inativo = False
 
         self.cor_normal = cor_normal
@@ -34,9 +34,11 @@ class Botao:
 
         elif self.rect.collidepoint((mx, my)):
             self.cor = self.cor_hover
-
+            return True
         else:
             self.cor = self.cor_normal
+
+        return False
     
     def setInatividade(self, atividade):
         self.inativo = atividade

@@ -11,5 +11,6 @@ class Cenario():
     def draw(self, janela):
         janela.blit(self.img, self.rect)
     
-    def update(self):
+    def update(self, amigos):
+        
         pass

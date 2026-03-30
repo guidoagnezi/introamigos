@@ -1,0 +1,193 @@
+{
+    "amigos": [
+        {
+            "id": "ad7bd1d2-bef9-4e6b-af66-3cce564f5518",
+            "nome": "chimpanini",
+            "x": 874,
+            "y": 49,
+            "state": "wandering",
+            "personalidade": "CARENTE RESENHUDO",
+            "energy": 0.508459635999717,
+            "social_need": 0.07279999999999995,
+            "relacoes": {
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": 1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": -1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": 1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": 1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": 1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "ad7bd1d2-bef9-4e6b-af66-3cce564f5518.png"
+        },
+        {
+            "id": "d3e06f45-eccd-431b-aadc-f7b87d260c76",
+            "nome": "fart",
+            "x": 435,
+            "y": 462,
+            "state": "resting",
+            "personalidade": "MALANDRO PRA FRENTE",
+            "energy": 0.17512332791501634,
+            "social_need": 1,
+            "relacoes": {
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": 1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": -1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": 1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": 1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": 1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "d3e06f45-eccd-431b-aadc-f7b87d260c76.png"
+        },
+        {
+            "id": "c975f793-12eb-4a0d-b0fb-a2a7963a2447",
+            "nome": "home",
+            "x": 245,
+            "y": 569,
+            "state": "grouping",
+            "personalidade": "COVARDE INGENUO",
+            "energy": 0.7194252801916473,
+            "social_need": 1,
+            "relacoes": {
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": 1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": -1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": -1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": -1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "c975f793-12eb-4a0d-b0fb-a2a7963a2447.png"
+        },
+        {
+            "id": "509c80ca-d018-454a-ba3a-5c45fae9939e",
+            "nome": "marg",
+            "x": 157,
+            "y": 70,
+            "state": "grouping",
+            "personalidade": "CARENTE RESENHUDO",
+            "energy": 0.312280706278251,
+            "social_need": 1,
+            "relacoes": {
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": 1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": -1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": -1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": 1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "509c80ca-d018-454a-ba3a-5c45fae9939e.png"
+        },
+        {
+            "id": "84b62fea-7c1d-4a72-9004-70260bb4ee5a",
+            "nome": "scub doo",
+            "x": 562,
+            "y": 363,
+            "state": "resting",
+            "personalidade": "APATICO PSICOPATA",
+            "energy": 0.1295688115864036,
+            "social_need": 1,
+            "relacoes": {
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": -1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": 1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": -1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": 1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": 1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": -1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": -1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "84b62fea-7c1d-4a72-9004-70260bb4ee5a.png"
+        },
+        {
+            "id": "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97",
+            "nome": "mag",
+            "x": 600,
+            "y": 0,
+            "state": "wandering",
+            "personalidade": "APATICO PRA FRENTE",
+            "energy": 0.29399876034069494,
+            "social_need": 0.5900999999999983,
+            "relacoes": {
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": -1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": -1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": 1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": 1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97.png"
+        },
+        {
+            "id": "7c515817-5dec-41cf-a038-bcfd73543027",
+            "nome": "xabialonso",
+            "x": 842,
+            "y": 618,
+            "state": "wandering",
+            "personalidade": "CINICO PSICOPATA",
+            "energy": 0.6363863391768713,
+            "social_need": 1,
+            "relacoes": {
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": -1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": -1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": -1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "10455a55-1105-44bd-b75b-201a8da02ace": 1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": -1
+            },
+            "imagem": "7c515817-5dec-41cf-a038-bcfd73543027.png"
+        },
+        {
+            "id": "10455a55-1105-44bd-b75b-201a8da02ace",
+            "nome": "ronaldp",
+            "x": 133,
+            "y": 0,
+            "state": "wandering",
+            "personalidade": "COVARDE OBCECADO",
+            "energy": 0.6216523804490797,
+            "social_need": 0.18970000000000106,
+            "relacoes": {
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": 1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": 1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": -1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": -1,
+                "5e3e9491-b66e-4ded-b863-19ad29c9345c": 1
+            },
+            "imagem": "10455a55-1105-44bd-b75b-201a8da02ace.png"
+        },
+        {
+            "id": "5e3e9491-b66e-4ded-b863-19ad29c9345c",
+            "nome": "rogerio",
+            "x": 874,
+            "y": 249,
+            "state": "grouping",
+            "personalidade": "APATICO INGENUO",
+            "energy": 0.2590332026679097,
+            "social_need": 1,
+            "relacoes": {
+                "10455a55-1105-44bd-b75b-201a8da02ace": 1,
+                "509c80ca-d018-454a-ba3a-5c45fae9939e": 1,
+                "84b62fea-7c1d-4a72-9004-70260bb4ee5a": 1,
+                "ad7bd1d2-bef9-4e6b-af66-3cce564f5518": 1,
+                "ea4c10c3-e68e-4e2f-b162-5775a6ae4b97": 1,
+                "7c515817-5dec-41cf-a038-bcfd73543027": -1,
+                "d3e06f45-eccd-431b-aadc-f7b87d260c76": 1,
+                "c975f793-12eb-4a0d-b0fb-a2a7963a2447": 1
+            },
+            "imagem": "5e3e9491-b66e-4ded-b863-19ad29c9345c.png"
+        }
+    ]
+}
