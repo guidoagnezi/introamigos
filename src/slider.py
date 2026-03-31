@@ -63,10 +63,10 @@ class Slider:
     def draw(self, tela):
         barra_largura = (self.largura - (self.n_barras - 1) * self.espaco) / self.n_barras
 
-        desc = fonte2.render(f"{self.nome}", True, "black")
+        desc = fonte2.render(f"{self.nome}", True, "black").convert_alpha()
         rect = desc.get_rect(topleft=(self.x, self.y - self.altura + 5))
 
-        value_txt = fonte3.render(f"{int(self.valor)}", True, "black")
+        value_txt = fonte3.render(f"{int(self.valor)}", True, "black").convert_alpha()
         rect_value = value_txt.get_rect(topleft=(self.x + self.largura + 10, self.y + 5))
 
         tela.blit(desc, rect)

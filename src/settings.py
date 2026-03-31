@@ -17,17 +17,15 @@ TITULO = "Intro Amigos"
 
 WANDERING = "wandering"
 FOLLOWING = "following"
-HUNGRY = "hungry"
-EATING = "eating"
 TALKING = "talking"
 INTERACTING = "interacting"
-PERSUING = "persuing"
-STEALING = "stealing"
 OBSERVING = "observing"
 DECIDING = "deciding"
 AVOIDING = "avoiding"
 GROUPING = "grouping"
 RESTING = "resting"
+GOSSIPING = "gossiping"
+ARGUMENTING = "argumenting"
 # Temporizadores
 
 WANDER_TIME = 120
@@ -47,7 +45,10 @@ img_negativo = pygame.image.load("amigo/negativo.png")
 img_maquiavelico = pygame.image.load("amigo/maquiavelico.png")
 img_curioso = pygame.image.load("amigo/confuso.png")
 img_talking = pygame.image.load("amigo/talking.png")
+img_arguing = pygame.image.load("amigo/arguing.png")
 img_zzz = pygame.image.load("amigo/zzz.png")
+img_wandering = pygame.image.load("amigo/wandering_icon.png")
+img_conversando = pygame.image.load("amigo/talking_icon.png")
 
 img_carregar = pygame.image.load("fundo/carregar_frame.png")
 img_descricao = pygame.image.load("fundo/desc_amigo.png")

@@ -4,7 +4,7 @@ import math
 
 class Fogueira:
     def __init__(self, x, y):
-        self.img = pygame.image.load("fundo/fogueira.png")
+        self.img = pygame.image.load("fundo/fogueira.png").convert_alpha()
         self.rect = self.img.get_rect(center=(x, y))
         self.raio_min = 120
         self.raio_max = 150

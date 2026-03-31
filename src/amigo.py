@@ -5,6 +5,7 @@ from fogueira import *
 from settings import *
 import uuid
 class Amigo():
+
     def __init__(self, img, nome, personalidade="PADRAO"):
 
         self.img = img
@@ -42,28 +43,25 @@ class Amigo():
         self.talking_amigo = None
         self.talk_timer = 0
         self.last_talk = None
-        self.talk_cooldown = 0
-        self.talk_cd_max = TALK_COOLDOWN_PADRAO
         self.relacoes = {}
-
+        self.interaction_type = None
+        self.opiniao = None
         self.alvo_social = None
+        self.alvo_fofoca = None
 
         self.is_lider = False
         self.cap_lideranca = random.random()    
 
         self.img_desc = pygame.transform.scale_by(img, 0.9)
-        self.txt_desc_nome = fonte5.render(f"{self.nome}", True, "black")
-        self.txt_desc_pers = fonte6.render(self.personalidade, True, "black")
-
+        self.txt_desc_nome = fonte5.render(f"{self.nome}", True, "black").convert_alpha()
+        self.txt_desc_pers = fonte6.render(self.personalidade, True, "black").convert_alpha()
+        
+        
         self.init_personalidade(self.personalidade)
 
     def init_personalidade(self, personalidade):
 
-        if "COVARDE" in personalidade:
-            self.talk_cd_max = TALK_COOLDOWN_PADRAO * 3
-
         if "CARENTE" in personalidade:
-            self.talk_cd_max = TALK_COOLDOWN_PADRAO * 0.5
             self.social_need_gain = 0.0014
 
         if "PRA FRENTE" in personalidade:
@@ -148,10 +146,11 @@ class Amigo():
             self.relacoes[outro] -= 1
     
     def finaliza_interacao(self):
-
+        self.talk_timer = 0
         self.target_amigo = None
         self.social_need -= 0.8
         self.alvo_social = None
+        print(self.relacoes)
         self.setEstado(WANDERING)
 
     def get_relacoes_filtradas(self, qtd=100):
@@ -177,14 +176,6 @@ class Amigo():
         self.social_need += self.social_need_gain
         self.social_need = max(0, min(1, self.social_need))
 
-        if self.energy < 0.2 and self.state != RESTING:
-
-            if fogueiras:
-                self.fogueira_alvo = random.choice(fogueiras)
-                self.target_pos = self.fogueira_alvo.get_ponto_aleatorio()
-
-            self.setEstado(RESTING)
-
         if self.state == WANDERING:
 
             if self.wander_timer >= WANDER_TIME:
@@ -194,7 +185,15 @@ class Amigo():
             else:
                 self.wander_timer += 1
             
-            if self.social_need > 0.6:
+            if self.energy < 0.2 and self.state != RESTING:
+
+                if fogueiras:
+                    self.fogueira_alvo = random.choice(fogueiras)
+                    self.target_pos = self.fogueira_alvo.get_ponto_aleatorio()
+
+                    self.setEstado(RESTING)
+
+            elif self.social_need > 0.6:
                 if random.random() < 0.05:
                     self.setEstado(OBSERVING)
 
@@ -218,11 +217,7 @@ class Amigo():
             # print(f"{self.nome} está decidindo")
             relacao = self.relacoes.get(self.alvo_social, 0)
 
-            if relacao < 0:
-                self.setEstado(AVOIDING)
-                print(f"{self.nome} decidiu evitar")
-
-            elif relacao > 0:
+            if relacao > 0:
                 if random.random() < 0.3 and self.social_need > 0.8: 
                     lider, seguidor = self.definir_lider(self.alvo_social)
 
@@ -235,8 +230,12 @@ class Amigo():
                     lider.setEstado(GROUPING)
                     seguidor.setEstado(GROUPING)
 
+            elif relacao <= -2 and random.random() < 0.4:
+                self.setEstado(AVOIDING)
+                print(f"{self.nome} decidiu evitar")
+
             else:
-                if self.talk_cooldown == 0 and self.alvo_social.talk_cooldown == 0:
+                if self.social_need > 0.8:
                     self.target_amigo = self.alvo_social
                     self.setEstado(FOLLOWING)
                 else:
@@ -264,12 +263,57 @@ class Amigo():
             self.talk_timer += 1
 
             if self.talk_timer > 120:  
-                self.setEstado(INTERACTING)
+                relacao = self.relacoes.get(self.target_amigo, 0)
+
+                if relacao < 0 and random.random() < 0.5:
+                    self.interaction_type = "argumento"
+                    print(self.interaction_type)
+                    self.setEstado(ARGUMENTING)
+
+                elif random.random() < 0.5 and len(self.relacoes) > 1:
+                    
+                    terceiros = [a for a in self.relacoes.keys() if a != self.target_amigo]
+
+                    if terceiros:
+                        self.alvo_fofoca = random.choice(terceiros)
+                        self.opiniao = self.relacoes.get(self.alvo_fofoca, 0)
+                        self.target_amigo.relacoes[self.alvo_fofoca] = self.target_amigo.relacoes.get(self.alvo_fofoca, 0) + self.opiniao * 0.5
+                    self.interaction_type = "fofoca"
+                    self.setEstado(GOSSIPING)
+
+                else:
+                    self.interaction_type = "normal"
+                    self.setEstado(INTERACTING)
+
                 self.talk_timer = 0
+
+        if self.state == ARGUMENTING and self.target_amigo:
+
+            outro = self.target_amigo
+
+            self.talk_timer += 1
+
+            if self.talk_timer > 180:
+                self.relacoes[outro] = self.relacoes.get(outro, 0) - 1.5
+                outro.relacoes[self] = outro.relacoes.get(self, 0) - 1.5
+                self.finaliza_interacao()
+                outro.finaliza_interacao()
+
+        if self.state == GOSSIPING and self.target_amigo:
+
+            outro = self.target_amigo
+
+            self.vel_x *= 0.9
+            self.vel_y *= 0.9
+
+            self.talk_timer += 1
+
+            if self.talk_timer > 120:
+                self.finaliza_interacao()
+                outro.finaliza_interacao()
 
         if self.state == INTERACTING and self.target_amigo:
 
-            
             outro = self.target_amigo
             self.ultimo_amigo = outro
             
@@ -383,7 +427,7 @@ class Amigo():
 
         if vel_modulo > 0.1:
             self.step_timer += self.vel_step * vel_modulo
-        elif self.state == TALKING:
+        elif self.state == TALKING or self.state == GOSSIPING or self.state == ARGUMENTING:
             self.step_timer += self.vel_step * 1.5
         elif self.state == RESTING:
             self.step_timer += self.vel_step * 0.5
@@ -412,6 +456,21 @@ class Amigo():
             rect_talking = img_talking.get_rect(center=(self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
             janela.blit(img_talking, rect_talking)
         
+        if self.state == ARGUMENTING:
+            rect_arguing = img_arguing.get_rect(center=(self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
+            janela.blit(img_arguing, rect_arguing)
+        
+        if self.state == GOSSIPING and self.target_amigo and self.alvo_fofoca:
+            img_alvo = pygame.transform.scale(self.alvo_fofoca.img, (36, 34))
+            rect_alvo = img_alvo.get_rect(center=(self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
+            rect_humor = img_positivo.get_rect(center=(self.rect.x + self.rect.width / 2 + 40, self.rect.y - 40 + self.offset_y))
+
+            janela.blit(img_alvo, rect_alvo)
+            if self.opiniao > 0:
+                janela.blit(img_positivo, rect_humor)
+            
+            else:
+                janela.blit(img_negativo, rect_humor)
         if self.state == RESTING:
             rect_zzz = img_zzz.get_rect(center=(self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
             janela.blit(img_zzz, rect_zzz)
@@ -465,3 +524,23 @@ class Amigo():
             x = x_base_i
             y = y_base + i * 90
             janela.blit(pygame.transform.scale(amigo.img, (70,70)), (x, y))
+        
+        if self.state == TALKING or self.state == GOSSIPING:
+            janela.blit(img_conversando, (hud_x + 190, 30))
+
+        elif self.state == ARGUMENTING and self.target_amigo:
+            janela.blit(img_negativo, (hud_x + 190, 30))
+
+        elif self.state == GROUPING and self.alvo_social:
+            janela.blit(pygame.transform.scale(self.alvo_social.img, (36, 34)), (hud_x+ 190, 30))
+        
+        elif self.state == RESTING:
+            janela.blit(img_zzz, (hud_x + 190, 30))
+        
+        elif (self.state == ARGUMENTING or self.state == AVOIDING) and (not "PSICOPATA" in self.personalidade and not "DIABOLICO" in self.personalidade):
+            janela.blit(img_negativo, (hud_x + 190, 30))
+
+        elif (self.state == ARGUMENTING or self.state == AVOIDING) and ("PSICOPATA" in self.personalidade or "DIABOLICO" in self.personalidade):
+            janela.blit(img_maquiavelico, (hud_x + 190, 30))
+        else:
+            janela.blit(img_wandering, (hud_x + 190, 30))

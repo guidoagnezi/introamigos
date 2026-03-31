@@ -36,12 +36,12 @@ class CenaAcampamento:
         self.botao_save = Botao(5, 5, self.img_save, "", self.salvar_jogo)
 
     def carregar_assets(self):
-        self.img = pygame.image.load("amigo/teste.png")
-        self.img2 = pygame.image.load("amigo/teste2.png")
-        self.img_fundo = pygame.image.load("fundo/fundo.png")
-        self.img_arb = pygame.image.load("fundo/arbusto.png")
-        self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png")
-        self.img_save = pygame.image.load("fundo/save_icon.png")
+        self.img = pygame.image.load("amigo/teste.png").convert_alpha()
+        self.img2 = pygame.image.load("amigo/teste2.png").convert_alpha()
+        self.img_fundo = pygame.image.load("fundo/fundo.png").convert_alpha()
+        self.img_arb = pygame.image.load("fundo/arbusto.png").convert_alpha()
+        self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png").convert_alpha()
+        self.img_save = pygame.image.load("fundo/save_icon.png").convert_alpha()
 
     def criar_cenarios(self):
         arbusto = Cenario(self.img_arb, LARGURA/3, ALTURA/3)
@@ -56,7 +56,7 @@ class CenaAcampamento:
 
     def criar_arvores(self):
 
-        a = Arvore(pygame.image.load("fundo/arvore.png"), 830, ALTURA - 600)
+        a = Arvore(pygame.image.load("fundo/arvore.png").convert_alpha(), 830, ALTURA - 600)
         self.arvores.append(a)
         self.sprite_group_general.append(a)
 
@@ -64,20 +64,21 @@ class CenaAcampamento:
         # amigo = Amigo(self.img, "Guido")
         # amigo2 = Amigo(self.img2, "Xibo")
 
-        amigo3 = Amigo(pygame.image.load("amigo/lol.png"), "Lude", "RESENHUDO INGENUO")
-        amigo4 = Amigo(pygame.image.load("amigo/jubilani.png"), "Lude", "CARENTE BOM PRA NADA")
-        amigo5 = Amigo(pygame.image.load("amigo/peter.png"), "Lude", "INGENUO PRA FRENTE")
+        # amigo3 = Amigo(pygame.image.load("amigo/lol.png").convert_alpha(), "Lude", "RESENHUDO INGENUO")
+        # amigo4 = Amigo(pygame.image.load("amigo/jubilani.png").convert_alpha(), "Lude", "CARENTE BOM PRA NADA")
+        # amigo5 = Amigo(pygame.image.load("amigo/peter.png").convert_alpha(), "Lude", "INGENUO PRA FRENTE")
         
         # self.sprite_group_amigo.append(amigo)
         # self.sprite_group_general.append(amigo)
         # self.sprite_group_amigo.append(amigo2)
         # self.sprite_group_general.append(amigo2)
-        self.sprite_group_amigo.append(amigo3)
-        self.sprite_group_general.append(amigo3)
-        self.sprite_group_amigo.append(amigo4)
-        self.sprite_group_general.append(amigo4)
-        self.sprite_group_amigo.append(amigo5)
-        self.sprite_group_general.append(amigo5)
+        # self.sprite_group_amigo.append(amigo3)
+        # self.sprite_group_general.append(amigo3)
+        # self.sprite_group_amigo.append(amigo4)
+        # self.sprite_group_general.append(amigo4)
+        # self.sprite_group_amigo.append(amigo5)
+        # self.sprite_group_general.append(amigo5)
+        pass
 
     def adiciona_amigo(self, amigo):
         self.sprite_group_amigo.append(amigo)
@@ -186,20 +187,20 @@ class CenaCriadorAmigo:
             self.criar_input_box()
 
     def carregar_assets(self):
-        self.img_quadro_img_temp = pygame.image.load("fundo/frame_1.png")
-        self.img_quadro_img_temp = pygame.transform.scale_by(self.img_quadro_img_temp, 2)
+        self.img_quadro_img_temp = pygame.image.load("fundo/frame_1.png").convert_alpha()
+        self.img_quadro_img_temp = pygame.transform.scale_by(self.img_quadro_img_temp, 2).convert_alpha()
         self.rect_quadro = self.img_quadro_img_temp.get_rect(center=(LARGURA - 200, 200))
 
-        self.img_titulo = pygame.image.load("fundo/titulo_criador.png")
+        self.img_titulo = pygame.image.load("fundo/titulo_criador.png").convert_alpha()
         self.rect_titulo = self.img_titulo.get_rect(topleft=(10,20))
 
-        self.img_personalidade = pygame.image.load("fundo/titulo_personalidade.png")
+        self.img_personalidade = pygame.image.load("fundo/titulo_personalidade.png").convert_alpha()
         self.rect_personalidade = self.img_titulo.get_rect(topleft=(self.margem_esquerda, 600))
 
-        self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png")
-        self.img_botao_carregar = pygame.image.load("fundo/carregar_frame.png")
+        self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png").convert_alpha()
+        self.img_botao_carregar = pygame.image.load("fundo/carregar_frame.png").convert_alpha()
 
-        self.txt_nome = fonte2.render("NOME", True, "black")
+        self.txt_nome = fonte2.render("NOME", True, "black").convert_alpha()
         self.rect_txt_nome = self.txt_nome.get_rect(topleft=(LARGURA - 340, 460))
 
     def criar_input_box(self):
@@ -214,10 +215,10 @@ class CenaCriadorAmigo:
         self.botao_desenhar = Botao(LARGURA - 340, 400, self.img_botao_carregar, "DESENHAR AMIGO", self.abrir_canva, fonte=fonte4)
 
     def criar_sliders(self):
-        self.sld_sim = Slider("SIMPATIA", self.margem_esquerda, 230, 300, 50, 10, 5)
-        self.sld_vig = Slider("VIGARICE", self.margem_esquerda, 330, 300, 50, 10, 5)
-        self.sld_cor = Slider("CORAGEM", self.margem_esquerda, 430, 300, 50, 10, 5)
-        self.sld_pai = Slider("PAIXAO", self.margem_esquerda, 530, 300, 50, 10, 5)
+        self.sld_sim = Slider("SIMPATIA", self.margem_esquerda, 230, 500, 50, 10, 5)
+        self.sld_vig = Slider("VIGARICE", self.margem_esquerda, 330, 500, 50, 10, 5)
+        self.sld_cor = Slider("CORAGEM", self.margem_esquerda, 430, 500, 50, 10, 5)
+        self.sld_pai = Slider("PAIXAO", self.margem_esquerda, 530, 500, 50, 10, 5)
         self.sprite_group_slider.append(self.sld_sim)
         self.sprite_group_slider.append(self.sld_vig)
         self.sprite_group_slider.append(self.sld_cor)
@@ -233,7 +234,7 @@ class CenaCriadorAmigo:
             try:
                 self.imagem_temp = pygame.image.load(caminho).convert_alpha()
                 self.imagem_temp_quadro = pygame.transform.scale(self.imagem_temp, (self.rect_quadro.
-                width - 30, self.rect_quadro.height - 30))
+                width - 30, self.rect_quadro.height - 30)).convert_alpha()
                 # self.imagem_temp = self.imagem_temp_quadro
             except pygame.error as e:
                 print(f"Erro ao carregar: {e}")
@@ -350,10 +351,10 @@ class CenaCriadorAmigo:
     def draw(self, janela):
         janela.fill("white")
         
-        txt_pt_rest = fonte2.render(f"PONTOS RESTANTES {self.pontos_restantes}", True, "black")
+        txt_pt_rest = fonte2.render(f"PONTOS RESTANTES {self.pontos_restantes}", True, "black").convert_alpha()
         rect_txt_pt_rest = txt_pt_rest.get_rect(topleft=(self.margem_esquerda, 140))
 
-        txt_personalidade_amigo = fonte2.render(self.personalidade, True, "black")
+        txt_personalidade_amigo = fonte2.render(self.personalidade, True, "black").convert_alpha()
         rect_txt_personalidade_amigo = txt_personalidade_amigo.get_rect(topleft=(self.margem_esquerda, 680))
 
         if self.imagem_temp:
@@ -405,19 +406,19 @@ class CenaCanva:
         
 
     def carregar_assets(self):
-        self.fundo = pygame.image.load("fundo/fundo_canva.png")
+        self.fundo = pygame.image.load("fundo/fundo_canva.png").convert_alpha()
         self.fundo_rect = self.fundo.get_rect(center=(LARGURA/2, ALTURA/2))
 
-        self.img_frame_confirmar = pygame.image.load("fundo/concluido_frame.png")
+        self.img_frame_confirmar = pygame.image.load("fundo/concluido_frame.png").convert_alpha()
 
-        self.img_frame_pincel = pygame.image.load("fundo/frame_pincel.png")
-        self.img_frame_borracha = pygame.image.load("fundo/frame_borracha.png")
-        self.img_frame_bucket = pygame.image.load("fundo/frame_bucket.png")
-        self.img_frame_undo = pygame.image.load("fundo/frame_undo.png")
-        self.img_frame_pequeno = pygame.image.load("fundo/frame_pequeno.png")
-        self.img_frame_medio = pygame.image.load("fundo/frame_medio.png")
-        self.img_frame_grande = pygame.image.load("fundo/frame_grande.png")
-        self.img_frame_muito_grande = pygame.image.load("fundo/frame_muito_grande.png")
+        self.img_frame_pincel = pygame.image.load("fundo/frame_pincel.png").convert_alpha()
+        self.img_frame_borracha = pygame.image.load("fundo/frame_borracha.png").convert_alpha()
+        self.img_frame_bucket = pygame.image.load("fundo/frame_bucket.png").convert_alpha()
+        self.img_frame_undo = pygame.image.load("fundo/frame_undo.png").convert_alpha()
+        self.img_frame_pequeno = pygame.image.load("fundo/frame_pequeno.png").convert_alpha()
+        self.img_frame_medio = pygame.image.load("fundo/frame_medio.png").convert_alpha()
+        self.img_frame_grande = pygame.image.load("fundo/frame_grande.png").convert_alpha()
+        self.img_frame_muito_grande = pygame.image.load("fundo/frame_muito_grande.png").convert_alpha()
 
         self.cursores = {
             "pincel": pygame.image.load("fundo/pincel.png").convert_alpha(),
@@ -681,7 +682,7 @@ class CenaTitulo:
     def __init__(self, game):
         self.slots = ["slot1", "slot2", "slot3"]
         self.game = game
-        self.img = pygame.image.load("fundo/titulo_jogo.png")
+        self.img = pygame.image.load("fundo/titulo_jogo.png").convert_alpha()
         self.rect = self.img.get_rect(center=(LARGURA/2, 200))
         self.sprite_group_botoes = []
 
@@ -692,7 +693,7 @@ class CenaTitulo:
     
     def carregar_assets(self):
 
-        self.img_apag = pygame.image.load("fundo/apagar.png")
+        self.img_apag = pygame.image.load("fundo/apagar.png").convert_alpha()
 
     def criar_botoes(self):
         x= LARGURA/2 - 150

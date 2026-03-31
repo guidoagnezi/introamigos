@@ -40,9 +40,9 @@ class InputBox:
     def draw(self, tela):
         pygame.draw.rect(tela, self.cor, self.rect, 2)
 
-        superficie = self.fonte.render(self.texto, True, (0, 0, 0))
+        superficie = self.fonte.render(self.texto, True, (0, 0, 0)).convert_alpha()
         tela.blit(superficie, (self.rect.x + 5, self.rect.y + 5))
 
         if self.ativo and int(time.time() * 2) % 2 == 0:
-            cursor = self.fonte.render("|", True, (0,0,0))
+            cursor = self.fonte.render("|", True, (0,0,0)).convert_alpha()
             tela.blit(cursor, (self.rect.x + 5 + superficie.get_width(), self.rect.y + 5))

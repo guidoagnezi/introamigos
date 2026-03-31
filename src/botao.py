@@ -47,7 +47,7 @@ class Botao:
 
         janela.blit(self.img, self.rect)
 
-        texto_surf = self.fonte.render(self.texto, True, self.cor)
-        texto_rect = texto_surf.get_rect(center=self.rect.center)
+        img_texto = self.fonte.render(self.texto, True, self.cor).convert_alpha()
+        texto_rect = img_texto.get_rect(center=self.rect.center)
 
-        janela.blit(texto_surf, texto_rect)
+        janela.blit(img_texto, texto_rect)
