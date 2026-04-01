@@ -10,6 +10,7 @@ from botao import *
 from fogueira import *
 from arvore import *
 from saveFile import *
+from eventoGlobal import *
 class CenaAcampamento:
     def __init__(self, game):
         self.game = game
@@ -18,6 +19,9 @@ class CenaAcampamento:
         self.already_following = False
         self.clique = False
 
+        self.evento_atual = None
+
+        self.lista_eventos = []
         self.sprite_group_general = []
         self.sprite_group_amigo = []
         self.sprite_group_cenario = []
@@ -30,6 +34,7 @@ class CenaAcampamento:
         self.criar_botoes()
         self.criar_fogueiras()
         self.criar_arvores()
+        self.criar_eventos()
     
     def criar_botoes(self):
         self.botao_confirmar = Botao(LARGURA/2 - 125, 700, self.img_botao_confirmar, "CRIAR AMIGO", self.cena_criacao)
@@ -43,6 +48,58 @@ class CenaAcampamento:
         self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png").convert_alpha()
         self.img_save = pygame.image.load("fundo/save_icon.png").convert_alpha()
 
+        self.img_chapeu = pygame.image.load("amigo/bowler.png").convert_alpha()
+        self.img_xicara = pygame.image.load("amigo/xicara.png").convert_alpha()
+
+    def criar_eventos(self):
+
+        def inicio_cha(amigos):
+            for a in amigos:
+                a.setEstado(WANDERING)
+                a.setAcessorio("chapeu", self.img_chapeu)
+                a.setAcessorio("item", self.img_xicara)
+
+        def update_cha(amigos):
+            for a in amigos:
+                a.social_need = max(0, a.social_need - 0.001)
+
+        def fim_cha(amigos):
+            for a in amigos:
+                a.removeAcessorios()
+                a.social_need = max(0, a.social_need - 0.3)
+
+        evento_cha = EventoGlobal("hora do cha", 600, inicio_cha, update_cha, fim_cha)
+
+        self.lista_eventos.append(evento_cha)
+
+        def inicio_soneca(amigos):
+            for a in amigos:
+                a.setEstado(RESTING)
+                a.energy = 0.2
+
+        def update_soneca(amigos):
+            pass
+
+        def fim_soneca(amigos):
+            for a in amigos:
+                a.setEstado(WANDERING)
+
+        evento_soneca = EventoGlobal("hora da soneca", 500, inicio_soneca, update_soneca, fim_soneca)
+
+        self.lista_eventos.append(evento_soneca)
+
+        def inicio_lig(amigo, game=self.game):
+            game.fps = 120
+        
+        def update_lig(amigo):
+            pass
+
+        def fim_lig(amigo):
+            self.game.fps = FPS
+
+        evento_ligeiro = EventoGlobal("ligeiro", 1000, inicio_lig, update_lig, fim_lig)
+        
+        self.lista_eventos.append(evento_ligeiro)
     def criar_cenarios(self):
         arbusto = Cenario(self.img_arb, LARGURA/3, ALTURA/3)
 
@@ -117,9 +174,10 @@ class CenaAcampamento:
             
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_s:
-                    # s = self.game.save_file
-                    # s.salvar_jogo(self.sprite_group_amigo)
-                    pass
+                    if not self.evento_atual and random.random():
+                        self.evento_atual = random.choice(self.lista_eventos)
+                        self.evento_atual.iniciar(self.sprite_group_amigo)
+
             
                 if event.key == pygame.K_l:
                     s = self.game.save_file
@@ -130,33 +188,52 @@ class CenaAcampamento:
             self.botao_save.handle_event(event)
     def update(self):
 
-            self.mx, self.my = pygame.mouse.get_pos()
-            for amigo in self.sprite_group_amigo:
-                amigo.update(self.sprite_group_amigo, self.fogueiras)
-                if amigo.rect.collidepoint(self.mx, self.my) and self.clique:
-                    pass
+        self.mx, self.my = pygame.mouse.get_pos()
+        for amigo in self.sprite_group_amigo:
+            amigo.update(self.sprite_group_amigo, self.fogueiras)
+            if amigo.rect.collidepoint(self.mx, self.my) and self.clique:
+                pass
 
-                
-                    self.clique = False
-                
-                if amigo.state == FOLLOWING:
-                    amigo.setTarget(self.mx, self.my)
-                
-                
-            self.botao_confirmar.update()
-            self.botao_save.update()
-            for a in self.arvores:
-                a.update(self.sprite_group_amigo)
+            
+                self.clique = False
+            
+            if amigo.state == FOLLOWING:
+                amigo.setTarget(self.mx, self.my)
+            
+            
+        self.botao_confirmar.update()
+        self.botao_save.update()
+        for a in self.arvores:
+            a.update(self.sprite_group_amigo)
+        
+        if not self.evento_atual and random.random() < 0.0005:
+            self.evento_atual = random.choice(self.lista_eventos)
+            self.evento_atual.iniciar(self.sprite_group_amigo)
+        # atualizar evento
+        if self.evento_atual:
+            self.evento_atual.update(self.sprite_group_amigo)
+
+            if not self.evento_atual.ativo:
+                self.evento_atual = None
+            
+
 
     def draw(self, janela):
             
-            self.sprite_group_general.sort(key= lambda obj: obj.rect.y + obj.rect.height)
 
+            self.sprite_group_general.sort(key= lambda obj: obj.rect.y + obj.rect.height)
+            
             janela.fill("white")
             janela.blit(self.img_fundo, (0,0))
-            
+
+            for a in self.arvores:
+                a.sombra.draw(janela)
+                
             for sprite in self.sprite_group_general:
                 sprite.draw(janela)
+
+            if self.evento_atual:
+                self.evento_atual.draw(janela)
 
             for amigo in self.sprite_group_amigo:
                 if amigo.rect.collidepoint(self.mx, self.my):
@@ -164,6 +241,11 @@ class CenaAcampamento:
             
             self.botao_confirmar.draw(janela)
             self.botao_save.draw(janela)
+
+            fps = self.game.clock.get_fps()
+            txt_fps = fonte.render(f"{fps}", True, "black")
+            janela.blit(txt_fps, (150, 10))
+
             pygame.display.update()
 
 class CenaCriadorAmigo:
@@ -683,7 +765,7 @@ class CenaTitulo:
         self.slots = ["slot1", "slot2", "slot3"]
         self.game = game
         self.img = pygame.image.load("fundo/titulo_jogo.png").convert_alpha()
-        self.rect = self.img.get_rect(center=(LARGURA/2, 200))
+        self.rect = self.img.get_rect(center=(LARGURA/2, ALTURA/2))
         self.sprite_group_botoes = []
 
         self.previews = {}
@@ -694,19 +776,28 @@ class CenaTitulo:
     def carregar_assets(self):
 
         self.img_apag = pygame.image.load("fundo/apagar.png").convert_alpha()
+        self.txt_selecione = fonte5.render("Selecione um save.", True, "black")
+        self.txt_vazio = fonte5.render("Vazio.", True, "black")
+        self.txt_apagar = fonte5.render("Apagar save?", True, "black")
 
     def criar_botoes(self):
         x= LARGURA/2 - 150
-        self.b_slot1 = Botao(x, ALTURA/2, img_carregar, "SLOT 1", lambda : self.carregar_save("slot1"), fonte4)
-        self.b_slot2 = Botao(x, ALTURA/2 + 80, img_carregar, "SLOT 2", lambda : self.carregar_save("slot2"), fonte4)
-        self.b_slot3 = Botao(x, ALTURA/2 + 160, img_carregar, "SLOT 3", lambda : self.carregar_save("slot3"), fonte4)
+        self.b_slot1 = Botao(x, ALTURA/2 - 50, img_carregar, "SLOT 1", lambda : self.carregar_save("slot1"), fonte4)
+        self.b_slot2 = Botao(x, ALTURA/2 + 30, img_carregar, "SLOT 2", lambda : self.carregar_save("slot2"), fonte4)
+        self.b_slot3 = Botao(x, ALTURA/2 + 110, img_carregar, "SLOT 3", lambda : self.carregar_save("slot3"), fonte4)
         
-        self.b_apag1 = Botao(x + 290, ALTURA/2, self.img_apag, "", lambda : self.apagar_save("slot1"))
-        self.b_apag2 = Botao(x + 290, ALTURA/2 + 80, self.img_apag, "", lambda : self.apagar_save("slot2"))
-        self.b_apag3 = Botao(x + 290, ALTURA/2 + 160, self.img_apag, "", lambda : self.apagar_save("slot3"))
+        self.b_apag1 = Botao(x + 290, ALTURA/2 - 50, self.img_apag, "", lambda : self.apagar_save("slot1"))
+        self.b_apag2 = Botao(x + 290, ALTURA/2 + 30, self.img_apag, "", lambda : self.apagar_save("slot2"))
+        self.b_apag3 = Botao(x + 290, ALTURA/2 + 110, self.img_apag, "", lambda : self.apagar_save("slot3"))
 
-        self.sprite_group_botoes = [self.b_slot1, self.b_slot2, self.b_slot3,
-                                    self.b_apag1, self.b_apag2, self.b_apag3]
+        self.sprite_group_botoes = [self.b_slot1, self.b_slot2, self.b_slot3]
+        self.sprite_group_botoes_gerais = []
+
+        self.sprite_group_b_apagar = [self.b_apag1, self.b_apag2, self.b_apag3]
+
+        self.sprite_group_botoes_gerais.extend(self.sprite_group_b_apagar)
+        self.sprite_group_botoes_gerais.extend(self.sprite_group_botoes)
+
 
     def criar_previews(self):
         for slot in self.slots:
@@ -756,43 +847,61 @@ class CenaTitulo:
 
             for botao in self.sprite_group_botoes:
                 botao.handle_event(event)
+            
+            for b in self.sprite_group_b_apagar:
+                b.handle_event(event)
 
         return None
     
     def update(self):
         for b in self.sprite_group_botoes:
             b.update()
+        
+        for b in self.sprite_group_b_apagar:
+            b.update()
 
     
-    def draw_preview_amigos(self, tela, amigos):
+    def draw_preview_amigos(self, janela, amigos):
         if not amigos:
-            # print("GUIDO")
+            rect = self.txt_vazio.get_rect(center=(LARGURA/2, 660))
+            janela.blit(self.txt_vazio, rect)
             return
 
         tamanho = 80
         espacamento = 16
+        y = 660
 
-        x_base = 100
-        y = 680
-        for i, amigo in enumerate(amigos[:9]): 
+        amigos_visiveis = amigos[:9]
+        n = len(amigos_visiveis)
 
+        largura_total = n * tamanho + (n - 1) * espacamento
+        
+        x_inicial = (LARGURA - largura_total) // 2
+
+        for i, amigo in enumerate(amigos_visiveis):
             img = pygame.transform.scale(amigo.img, (tamanho, tamanho))
 
-            x = x_base + i * (tamanho + espacamento)
+            x = x_inicial + i * (tamanho + espacamento)
 
-            rect = img.get_rect(center=(x, y))
-
-            tela.blit(img, rect)
+            rect = img.get_rect(center=(x + tamanho // 2, y))
+            janela.blit(img, rect)
 
     def draw(self, janela):
 
         janela.fill("white")
         janela.blit(self.img, self.rect)
         for b in self.sprite_group_botoes:
-            b.draw(janela)
             if b.update():
-                # print(self.previews)
                 amigos = self.previews.get(b.texto.replace(" ", "").lower(), [])
-                # print(amigos)
-                # print(b.texto.replace(" ", "").lower())
                 self.draw_preview_amigos(janela, amigos)
+
+        if not any(b.update() for b in self.sprite_group_botoes_gerais):
+            rect = self.txt_selecione.get_rect(center=(LARGURA/2, 660))
+            janela.blit(self.txt_selecione, rect)
+        
+        elif any(b.update() for b in self.sprite_group_b_apagar):
+            rect = self.txt_apagar.get_rect(center=(LARGURA/2, 660))
+            janela.blit(self.txt_apagar, rect)
+
+        for b in self.sprite_group_botoes_gerais:
+            b.draw(janela)

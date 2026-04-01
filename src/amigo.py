@@ -56,7 +56,10 @@ class Amigo():
         self.txt_desc_nome = fonte5.render(f"{self.nome}", True, "black").convert_alpha()
         self.txt_desc_pers = fonte6.render(self.personalidade, True, "black").convert_alpha()
         
-        
+        self.acessorios = {
+            "chapeu": None,
+            "item": None
+        }
         self.init_personalidade(self.personalidade)
 
     def init_personalidade(self, personalidade):
@@ -77,6 +80,13 @@ class Amigo():
         if self.state == WANDERING:
             self.wander_timer = WANDER_TIME
             self.alvo_social = None
+    
+    def setAcessorio(self, tipo, img):
+        self.acessorios[tipo] = img.convert_alpha()
+
+    def removeAcessorios(self):
+        for k in self.acessorios:
+            self.acessorios[k] = None
 
     def getEstado(self):
         return self.state
@@ -448,6 +458,18 @@ class Amigo():
         
         # pygame.draw.rect(janela, (255, 0, 0), self.rect, 2)
         # janela.blit(fonte.render(self.state, True, "black"), (self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
+        if self.acessorios["chapeu"]:
+            chapeu = self.acessorios["chapeu"]
+            chapeu_rot = pygame.transform.rotate(chapeu, -self.angulo)
+            rect_chapeu = chapeu_rot.get_rect(midbottom=(self.rect.centerx, self.rect.y + self.offset_y + 30))
+            janela.blit(chapeu_rot, rect_chapeu)
+
+        if self.acessorios["item"]:
+            item = self.acessorios["item"]
+            item_rot = pygame.transform.rotate(item, -self.angulo)
+            rect_item = item_rot.get_rect(center=(self.rect.centerx + 60, self.rect.centery + self.offset_y))
+            janela.blit(item_rot, rect_item)
+        
         if self.state == FOLLOWING:
             rect_curioso = img_curioso.get_rect(center=(self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
             janela.blit(img_curioso, rect_curioso)

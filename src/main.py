@@ -13,6 +13,7 @@ class Game():
         self.janela = pygame.display.set_mode((LARGURA, ALTURA))
         self.clock = pygame.time.Clock()
         self.save_file : SaveFile = None
+        self.fps = FPS
         pygame.init()
 
         self.cena_atual = CenaTitulo(self)
@@ -22,7 +23,7 @@ class Game():
 
     def run(self):
         while True:
-            self.clock.tick(FPS)
+            self.clock.tick(self.fps)
             
             for event in pygame.event.get():
 

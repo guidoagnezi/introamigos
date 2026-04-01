@@ -2,22 +2,13 @@ import pygame
 import random
 import math
 
-class Arvore:
-    def __init__(self, img, x, y):
-        self.img = img
-
+class Sombra:
+    def __init__(self, x, y, largura, altura):
         self.x = x
         self.y = y
-
-        self.rect = self.img.get_rect(center=(x, y))
-
-        self.sombra_largura = self.rect.width * 1.2
-        self.sombra_altura = 120
-
-        self.tilt_timer = 10000
-        self.angulo = 0
-
-        self.transparente = False
+        self.largura = largura
+        self.altura = altura
+    
     def esta_na_sombra(self, pos):
         sombra = self.get_sombra_rect()
 
@@ -27,10 +18,10 @@ class Arvore:
 
     def get_sombra_rect(self):
         return pygame.Rect(
-            self.rect.centerx - self.sombra_largura/2,
-            self.rect.bottom - self.sombra_altura / 2,
-            self.sombra_largura,
-            self.sombra_altura
+            self.x,
+            self.y,
+            self.largura,
+            self.altura
         )
 
     def get_ponto_sombra(self):
@@ -41,23 +32,7 @@ class Arvore:
 
         return x, y
 
-    def update(self, amigos):
-        # self.tilt_timer += 0.0005
-        # self.angulo = math.sin(self.tilt_timer) * 4
-        self.transparente = False
-
-        for amigo in amigos:
-            if (
-                amigo.rect.centerx >= self.rect.left and
-                amigo.rect.centerx <= self.rect.right and
-                amigo.rect.top >= self.rect.top and
-                amigo.rect.bottom <= self.rect.bottom
-            ):
-                self.transparente = True
-                break
-
     def draw(self, janela):
-
         sombra_rect = self.get_sombra_rect()
 
         sombra_surf = pygame.Surface(
@@ -72,6 +47,42 @@ class Arvore:
         )
 
         janela.blit(sombra_surf, sombra_rect)
+        
+class Arvore:
+    def __init__(self, img, x, y):
+        self.img = img
+
+        self.x = x
+        self.y = y
+
+        self.rect = self.img.get_rect(center=(x, y))
+
+        self.sombra_largura = self.rect.width * 1.2
+        self.sombra_altura = 120
+
+        self.sombra = Sombra(self.rect.centerx - self.sombra_largura/2, self.rect.bottom - self.sombra_altura / 2, self.rect.width * 1.2, 120)
+
+
+        self.tilt_timer = 10000
+        self.angulo = 0
+
+        self.transparente = False
+
+    def update(self, amigos):
+
+        self.transparente = False
+
+        for amigo in amigos:
+            if (
+                amigo.rect.centerx >= self.rect.left and
+                amigo.rect.centerx <= self.rect.right and
+                amigo.rect.top >= self.rect.top and
+                amigo.rect.bottom <= self.rect.bottom
+            ):
+                self.transparente = True
+                break
+
+    def draw(self, janela):
 
         img_rot = pygame.transform.rotate(self.img, self.angulo)
 
