@@ -6,7 +6,7 @@ from tkinter.filedialog import askopenfilename
 root = tk.Tk()
 root.withdraw()
 
-LARGURA = 1024
+LARGURA = 1424
 ALTURA = 768
 FPS = 60
 TITULO = "Intro Amigos"
@@ -39,6 +39,7 @@ MAX_VEL_Y = 2
 
 HUD_WIDTH = 256
 
+# Imagens constantes
 img_seta = pygame.image.load("amigo/seta.png")
 img_positivo = pygame.image.load("amigo/positivo.png")
 img_negativo = pygame.image.load("amigo/negativo.png")
@@ -52,14 +53,12 @@ img_conversando = pygame.image.load("amigo/talking_icon.png")
 
 img_carregar = pygame.image.load("fundo/carregar_frame.png")
 img_descricao = pygame.image.load("fundo/desc_amigo.png")
+
+# Fontes
 pygame.font.init()
 fonte = pygame.font.SysFont(None, 24)
 fonte2 = pygame.font.Font("fonte/guidofontenasal.ttf", 26)
 fonte3 = pygame.font.Font("fonte/guidofontenasal.ttf", 30)
 fonte4 = pygame.font.Font("fonte/guidofontenasal.ttf", 20)
-
-txt_amigos_desc = fonte4.render("AMIGOS", True, "black")
-txt_inimigos_desc = fonte4.render("INIMIGOS", True, "black")
-
 fonte5 = pygame.font.SysFont(None, 48)
 fonte6 = pygame.font.Font("fonte/guidofontenasal.ttf", 12)

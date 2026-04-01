@@ -4,6 +4,7 @@ import math
 from fogueira import *
 from settings import *
 import uuid
+
 class Amigo():
 
     def __init__(self, img, nome, personalidade="PADRAO"):

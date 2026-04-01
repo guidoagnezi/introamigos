@@ -36,20 +36,29 @@ class CenaAcampamento:
         self.criar_arvores()
         self.criar_eventos()
     
-    def criar_botoes(self):
-        self.botao_confirmar = Botao(LARGURA/2 - 125, 700, self.img_botao_confirmar, "CRIAR AMIGO", self.cena_criacao)
-        self.botao_save = Botao(5, 5, self.img_save, "", self.salvar_jogo)
-
+    
     def carregar_assets(self):
         self.img = pygame.image.load("amigo/teste.png").convert_alpha()
         self.img2 = pygame.image.load("amigo/teste2.png").convert_alpha()
+
         self.img_fundo = pygame.image.load("fundo/fundo.png").convert_alpha()
+        self.rect_fundo = self.img_fundo.get_rect(center=(LARGURA/2, ALTURA/2))
+
         self.img_arb = pygame.image.load("fundo/arbusto.png").convert_alpha()
+
         self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png").convert_alpha()
         self.img_save = pygame.image.load("fundo/save_icon.png").convert_alpha()
+        self.img_quit = pygame.image.load("fundo/quit_icon.png").convert_alpha()
 
         self.img_chapeu = pygame.image.load("amigo/bowler.png").convert_alpha()
         self.img_xicara = pygame.image.load("amigo/xicara.png").convert_alpha()
+    
+    def criar_botoes(self):
+        self.botao_confirmar = Botao(LARGURA/2 - self.img_botao_confirmar.get_width()/2, ALTURA - 80, self.img_botao_confirmar, "CRIAR AMIGO", self.cena_criacao)
+        self.botao_save = Botao(5, 5, self.img_save, "", self.salvar_jogo)
+        self.botao_quit = Botao(5, 55, self.img_quit, "", self.sair)
+        
+        self.botoes = [self.botao_confirmar, self.botao_save, self.botao_quit]
 
     def criar_eventos(self):
 
@@ -86,7 +95,7 @@ class CenaAcampamento:
 
         evento_soneca = EventoGlobal("hora da soneca", 500, inicio_soneca, update_soneca, fim_soneca)
 
-        self.lista_eventos.append(evento_soneca)
+        #self.lista_eventos.append(evento_soneca)
 
         def inicio_lig(amigo, game=self.game):
             game.fps = 120
@@ -110,13 +119,11 @@ class CenaAcampamento:
         f = Fogueira(LARGURA/2, ALTURA/2)
         self.fogueiras.append(f)
         self.sprite_group_general.append(f)
-
     def criar_arvores(self):
 
-        a = Arvore(pygame.image.load("fundo/arvore.png").convert_alpha(), 830, ALTURA - 600)
+        a = Arvore(pygame.image.load("fundo/arvore.png").convert_alpha(), LARGURA - 250, ALTURA - 600)
         self.arvores.append(a)
         self.sprite_group_general.append(a)
-
     def criar_amigos(self):
         # amigo = Amigo(self.img, "Guido")
         # amigo2 = Amigo(self.img2, "Xibo")
@@ -136,18 +143,15 @@ class CenaAcampamento:
         # self.sprite_group_amigo.append(amigo5)
         # self.sprite_group_general.append(amigo5)
         pass
-
     def adiciona_amigo(self, amigo):
         self.sprite_group_amigo.append(amigo)
-        self.sprite_group_general.append(amigo)
-        
+        self.sprite_group_general.append(amigo)      
     def cena_criacao(self):
         escolha = CenaCriadorAmigo(self.game, self)
         self.game.setCena(escolha)
     def salvar_jogo(self):
         s = self.game.save_file
         s.salvar_jogo(self.sprite_group_amigo)
-
     def recarregar(self, amigos):
 
         self.sprite_group_amigo.clear()
@@ -164,28 +168,31 @@ class CenaAcampamento:
 
         self.sprite_group_amigo.extend(amigos)
         self.sprite_group_general.extend(amigos)
+    def sair(self):
+        self.salvar_jogo()
+        self.game.setCena(CenaTitulo(self.game))
 
     def handle_events(self, event):
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                self.mx, self.my = pygame.mouse.get_pos()
-                self.clique = True
-            
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_s:
-                    if not self.evento_atual and random.random():
-                        self.evento_atual = random.choice(self.lista_eventos)
-                        self.evento_atual.iniciar(self.sprite_group_amigo)
+        if event.type == pygame.QUIT:
+            pygame.quit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            self.mx, self.my = pygame.mouse.get_pos()
+            self.clique = True
+        
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_s:
+                if not self.evento_atual and random.random():
+                    self.evento_atual = random.choice(self.lista_eventos)
+                    self.evento_atual.iniciar(self.sprite_group_amigo)
 
-            
-                if event.key == pygame.K_l:
-                    s = self.game.save_file
-                    amigo_s = s.carregar_jogo()
-                    self.recarregar(amigo_s)
+        
+            if event.key == pygame.K_l:
+                s = self.game.save_file
+                amigo_s = s.carregar_jogo()
+                self.recarregar(amigo_s)
 
-            self.botao_confirmar.handle_event(event)
-            self.botao_save.handle_event(event)
+        for b in self.botoes:
+            b.handle_event(event)
     def update(self):
 
         self.mx, self.my = pygame.mouse.get_pos()
@@ -200,9 +207,9 @@ class CenaAcampamento:
             if amigo.state == FOLLOWING:
                 amigo.setTarget(self.mx, self.my)
             
-            
-        self.botao_confirmar.update()
-        self.botao_save.update()
+        for b in self.botoes:
+            b.update()
+
         for a in self.arvores:
             a.update(self.sprite_group_amigo)
         
@@ -214,17 +221,15 @@ class CenaAcampamento:
             self.evento_atual.update(self.sprite_group_amigo)
 
             if not self.evento_atual.ativo:
-                self.evento_atual = None
-            
-
-
+                self.evento_atual = None            
     def draw(self, janela):
             
 
             self.sprite_group_general.sort(key= lambda obj: obj.rect.y + obj.rect.height)
             
             janela.fill("white")
-            janela.blit(self.img_fundo, (0,0))
+
+            janela.blit(self.img_fundo, self.rect_fundo)
 
             for a in self.arvores:
                 a.sombra.draw(janela)
@@ -239,8 +244,8 @@ class CenaAcampamento:
                 if amigo.rect.collidepoint(self.mx, self.my):
                     amigo.draw_desc(janela)
             
-            self.botao_confirmar.draw(janela)
-            self.botao_save.draw(janela)
+            for b in self.botoes:
+                b.draw(janela)
 
             fps = self.game.clock.get_fps()
             txt_fps = fonte.render(f"{fps}", True, "black")
@@ -514,74 +519,38 @@ class CenaCanva:
         return sur
 
     def criar_botoes(self):
+        margem_x = LARGURA * 0.15
+        espacamento_y = ALTURA * 0.095
         
-        self.botao_confirmar = Botao(LARGURA/2 - 200, ALTURA/2 + 260, self.img_frame_confirmar, "CONCLUIDO", self.concluir_cena, fonte=fonte4, cor_normal="white")
+        self.botao_confirmar = Botao(LARGURA/2 - self.img_frame_confirmar.get_width() /2, self.rect_canvas.bottom + 10, 
+                                     self.img_frame_confirmar, "CONCLUIDO", 
+                                     self.concluir_cena, fonte=fonte4, cor_normal="white")
 
-        self.botao_pincel = Botao(180, 150, self.img_frame_pincel, "", lambda: self.mudar_ferramenta("pincel"))
-        self.botao_borracha = Botao(180, 230, self.img_frame_borracha, "", lambda: self.mudar_ferramenta("borracha"))
-        self.botao_bucket = Botao(180, 310, self.img_frame_bucket, "", lambda: self.mudar_ferramenta("bucket"))
+        x_ferramentas = self.rect_canvas.left - 85
+        self.botao_undo = Botao(x_ferramentas, self.rect_canvas.top, self.img_frame_undo, "", self.desfazer)
+        self.botao_pincel = Botao(x_ferramentas, self.rect_canvas.top + espacamento_y, self.img_frame_pincel, "", lambda: self.mudar_ferramenta("pincel"))
+        self.botao_borracha = Botao(x_ferramentas, self.rect_canvas.top + espacamento_y * 2, self.img_frame_borracha, "", lambda: self.mudar_ferramenta("borracha"))
+        self.botao_bucket = Botao(x_ferramentas, self.rect_canvas.top + espacamento_y * 3, self.img_frame_bucket, "", lambda: self.mudar_ferramenta("bucket"))
 
-        self.botao_undo = Botao(180, 70, self.img_frame_undo, "", self.desfazer)
 
-        primeiro = 400
-        self.botao_pequeno = Botao(180, primeiro, self.img_frame_pequeno, "", lambda: self.mudar_tamanho(4))
-        self.botao_medio =  Botao(180, primeiro + 80, self.img_frame_medio, "", lambda: self.mudar_tamanho(10))
-        self.botao_grande =  Botao(180, primeiro + 160, self.img_frame_grande, "", lambda: self.mudar_tamanho(18))
-        self.botao_muito_grande =  Botao(180, primeiro + 240, self.img_frame_muito_grande, "", lambda: self.mudar_tamanho(24))
+        self.botao_pequeno = Botao(x_ferramentas, self.rect_canvas.top + espacamento_y * 4, self.img_frame_pequeno, "", lambda: self.mudar_tamanho(4))
+        self.botao_medio =  Botao(x_ferramentas, self.rect_canvas.top + espacamento_y * 5, self.img_frame_medio, "", lambda: self.mudar_tamanho(10))
+        self.botao_grande =  Botao(x_ferramentas, self.rect_canvas.top + espacamento_y * 6, self.img_frame_grande, "", lambda: self.mudar_tamanho(18))
+        self.botao_muito_grande =  Botao(x_ferramentas, self.rect_canvas.top + espacamento_y * 7, self.img_frame_muito_grande, "", lambda: self.mudar_tamanho(24))
 
-        self.hud = [self.botao_borracha,
-                    self.botao_pincel, 
-                    self.botao_bucket,
-                    self.botao_undo,
-
-                    self.botao_confirmar, 
-
-                    self.botao_pequeno, 
-                    self.botao_medio, 
-                    self.botao_grande, 
-                    self.botao_muito_grande
-                    ]
+        self.hud = [self.botao_borracha, self.botao_pincel, self.botao_bucket, self.botao_undo,
+                    self.botao_confirmar, self.botao_pequeno, self.botao_medio, 
+                    self.botao_grande, self.botao_muito_grande]
         
-        # paleta
+        cores = ["red", "darkred", "darkorange", "darkorange4", "yellow", "yellow3", "green1", "green4",
+                 "cyan", "cyan3", "blue", "blue4", "magenta1", "magenta4", "black", "gray58", "gray80",
+                 "azure", "darksalmon", "navajowhite", "saddlebrown", "coral4"]
         
-        cores = [
-        "red",
-        "darkred",
-        "darkorange",
-        "darkorange4",
-        "yellow",
-        "yellow3",
-        "green1",
-        "green4",
-        "cyan",
-        "cyan3",
-        "blue",
-        "blue4",
-        "magenta1",
-        "magenta4",
-        "black",
-        "gray58",
-        "gray80",
-        "azure",
-        "darksalmon",
-        "navajowhite",
-        "saddlebrown",
-        "coral4"
-
-        ]
-
-        
+        x_paleta = self.rect_canvas.right + 12
         for i, cor in enumerate(cores):
-            x = 775 + (i % 2) * 40
-            y = 150 + (i // 2) * 40
-
-            botao = Botao(
-                x, y,
-                self.cria_superficie_paleta(cor),
-                "",
-                lambda c=cor: self.mudar_cor(c)
-            )
-
+            x = x_paleta + (i % 2) * 40
+            y = self.rect_canvas.top + (i // 2) * 40
+            botao = Botao(x, y, self.cria_superficie_paleta(cor), "", lambda c=cor: self.mudar_cor(c))
             self.hud.append(botao)
         
 
