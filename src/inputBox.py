@@ -15,6 +15,12 @@ class InputBox:
         self.cor_ativa = (100, 150, 255)
         self.cor = self.cor_inativa
 
+        self.backspace_held = False
+        self.backspace_timer = 0
+        self.backspace_delay = 0.4   
+        self.backspace_interval = 0.05  
+        self.backspace_started = False
+
         self.fonte = pygame.font.SysFont(None, self.tamanho_fonte)
 
     def handle_event(self, event):
@@ -32,11 +38,34 @@ class InputBox:
 
             elif event.key == pygame.K_BACKSPACE:
                 self.texto = self.texto[:-1]
+                self.backspace_held = True
+                self.backspace_timer = time.time()
+                self.backspace_started = False
 
             else:
                 if len(self.texto) < self.tamanho_max_texto:
                     self.texto += event.unicode
+            
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_BACKSPACE:
+                self.backspace_held = False
 
+        self.texto = self.texto.replace("^", "").replace("~", "").replace("´", "").replace("`", "")
+
+    def update(self):
+
+        if self.backspace_held and self.ativo:
+            agora = time.time()
+
+            if not self.backspace_started:
+                if agora - self.backspace_timer > self.backspace_delay:
+                    self.backspace_started = True
+                    self.backspace_timer = agora
+            else:
+                if agora - self.backspace_timer > self.backspace_interval:
+                    self.texto = self.texto[:-1]
+                    self.backspace_timer = agora
+                    
     def draw(self, tela):
         pygame.draw.rect(tela, self.cor, self.rect, 2)
 

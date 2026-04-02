@@ -262,6 +262,7 @@ class CenaCriadorAmigo:
 
             self.personalidade = ""
             self.sprite_group_slider = []
+            self.sprite_group_inputb = []
 
             self.margem_esquerda = 15
 
@@ -272,6 +273,9 @@ class CenaCriadorAmigo:
             self.criar_sliders()
             self.criar_botoes()
             self.criar_input_box()
+
+            self.input_ativo_index = 0
+            self.sprite_group_inputb[self.input_ativo_index].ativo = True
 
     def carregar_assets(self):
         self.img_quadro_img_temp = pygame.image.load("fundo/frame_1.png").convert_alpha()
@@ -286,26 +290,46 @@ class CenaCriadorAmigo:
 
         self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png").convert_alpha()
         self.img_botao_carregar = pygame.image.load("fundo/carregar_frame.png").convert_alpha()
-
+        
+        self.img_botao_voltar = pygame.image.load("fundo/voltar.png")
         self.txt_nome = fonte2.render("NOME", True, "black").convert_alpha()
         self.rect_txt_nome = self.txt_nome.get_rect(topleft=(LARGURA - 340, 460))
 
+        self.txt_comida = fonte2.render("COMIDA FAVORITA", True, "black").convert_alpha()
+        self.rect_txt_comida= self.txt_comida.get_rect(topleft=(LARGURA - 804, 235))
+
+        self.txt_coisa = fonte2.render("ASSUNTO FAVORITO", True, "black").convert_alpha()
+        self.rect_txt_coisa = self.txt_comida.get_rect(topleft=(LARGURA - 804, 335))
+        
+        self.txt_criador = fonte2.render("NOME DO CRIADOR", True, "black")
+        self.rect_txt_criador = self.txt_criador.get_rect(topleft=(LARGURA - 804, 435))
+        
+        # janela.blit(self.txt_coisa self.rect_txt_coisa)
     def criar_input_box(self):
         self.input_box = InputBox(LARGURA - 240, 460, 180, 40, tamanho_fonte=40)
+        self.inputb_comida = InputBox(LARGURA - 804, 285, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
+        self.inputb_coisa = InputBox(LARGURA - 804, 385, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
+        self.inputb_nome_do_criador = InputBox(LARGURA - 804, 485, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
+        self.sprite_group_inputb = [self.input_box, self.inputb_comida, self.inputb_coisa, self.inputb_nome_do_criador]
 
     def criar_botoes(self):
 
         self.botao_confirmar = Botao(LARGURA - 340, 700, self.img_botao_confirmar, "CRIAR AMIGO", self.criar_amigo)
 
+        self.botao_voltar = Botao(LARGURA - 420, 700, self.img_botao_voltar, "", lambda : self.game.setCena(self.cena_acamp))
+
         self.botao_carregar_imagem = Botao(LARGURA - 340, 350, self.img_botao_carregar, "CARREGAR IMAGEM", self.selecionar_imagem, fonte=fonte4)
         
         self.botao_desenhar = Botao(LARGURA - 340, 400, self.img_botao_carregar, "DESENHAR AMIGO", self.abrir_canva, fonte=fonte4)
 
+        self.botoes = [self.botao_carregar_imagem, self.botao_confirmar, self.botao_voltar, self.botao_desenhar]
+        
     def criar_sliders(self):
         self.sld_sim = Slider("SIMPATIA", self.margem_esquerda, 230, 500, 50, 10, 5)
         self.sld_vig = Slider("VIGARICE", self.margem_esquerda, 330, 500, 50, 10, 5)
         self.sld_cor = Slider("CORAGEM", self.margem_esquerda, 430, 500, 50, 10, 5)
         self.sld_pai = Slider("PAIXAO", self.margem_esquerda, 530, 500, 50, 10, 5)
+
         self.sprite_group_slider.append(self.sld_sim)
         self.sprite_group_slider.append(self.sld_vig)
         self.sprite_group_slider.append(self.sld_cor)
@@ -403,28 +427,51 @@ class CenaCriadorAmigo:
         return " ".join(top)
 
     def handle_events(self, event):
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_TAB:
+                # desativa atual
+                self.sprite_group_inputb[self.input_ativo_index].ativo = False
+                
+                # próximo índice (com loop)
+                self.input_ativo_index = (self.input_ativo_index + 1) % len(self.sprite_group_inputb)
+                
+                # ativa próxima
+                self.sprite_group_inputb[self.input_ativo_index].ativo = True
+                
+                # atualiza cor visual
+                for ib in self.sprite_group_inputb:
+                    ib.cor = ib.cor_ativa if ib.ativo else ib.cor_inativa
+                
+                return
+            
         if event.type == pygame.QUIT:
             pygame.quit()
 
         for slider in self.sprite_group_slider:
             slider.handle_event(event, self.sprite_group_slider, self.max_pontos)
         
-        self.input_box.handle_event(event)
-        self.botao_confirmar.handle_event(event)
-        self.botao_carregar_imagem.handle_event(event)
-        self.botao_desenhar.handle_event(event)
+        for ib in self.sprite_group_inputb:
+            ib.handle_event(event)
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                for i, ib in enumerate(self.sprite_group_inputb):
+                    if ib.rect.collidepoint(event.pos):
+                        self.input_ativo_index = i
+            
+        for b in self.botoes:
+            b.handle_event(event)
 
     def update(self):
         self.pontos_restantes = self.max_pontos - sum(s.valor for s in self.sprite_group_slider)
         
-        if not self.imagem_temp or self.input_box.texto == "":
+        if not self.imagem_temp or any(b.texto == "" for b in self.sprite_group_inputb):
             self.botao_confirmar.setInatividade(True)
         else:
             self.botao_confirmar.setInatividade(False)
 
-        self.botao_confirmar.update()
-        self.botao_carregar_imagem.update()
-        self.botao_desenhar.update()
+        for b in self.botoes:
+            b.update()
 
         atributos = {
             "simpatia" : self.sld_sim.valor,
@@ -434,10 +481,12 @@ class CenaCriadorAmigo:
         }
         # print(atributos)
         self.personalidade = self.define_personalidade(atributos)
+        for ib in self.sprite_group_inputb:
+            ib.update()
 
     def draw(self, janela):
         janela.fill("white")
-        
+        print(pygame.mouse.get_pos())
         txt_pt_rest = fonte2.render(f"PONTOS RESTANTES {self.pontos_restantes}", True, "black").convert_alpha()
         rect_txt_pt_rest = txt_pt_rest.get_rect(topleft=(self.margem_esquerda, 140))
 
@@ -449,6 +498,9 @@ class CenaCriadorAmigo:
             janela.blit(self.imagem_temp_quadro, rect)
         
         janela.blit(self.txt_nome, self.rect_txt_nome)
+        janela.blit(self.txt_comida, self.rect_txt_comida)
+        janela.blit(self.txt_coisa, self.rect_txt_coisa)
+        janela.blit(self.txt_criador, self.rect_txt_criador)
 
         janela.blit(self.img_quadro_img_temp, self.rect_quadro)
         janela.blit(self.img_titulo, self.rect_titulo)
@@ -460,10 +512,11 @@ class CenaCriadorAmigo:
         for slider in self.sprite_group_slider:
             slider.draw(janela)
         
-        self.botao_confirmar.draw(janela)
-        self.botao_carregar_imagem.draw(janela)
-        self.botao_desenhar.draw(janela)
-        self.input_box.draw(janela)
+        for b in self.botoes:
+            b.draw(janela)
+        
+        for ib in self.sprite_group_inputb:
+            ib.draw(janela)
 
 class CenaCanva:
     def __init__(self, game, cena_criador):
