@@ -4,15 +4,19 @@ import math
 from fogueira import *
 from settings import *
 import uuid
+from utils import *
 
 class Amigo():
 
-    def __init__(self, img, nome, personalidade="PADRAO"):
+    def __init__(self, img, nome, personalidade="PADRAO", comida_favoria="Biscoito", assunto_favorito="IntroComp", criador="Não creditado"):
 
         self.img = img
         self.rect = img.get_rect(center=((LARGURA/2) + random.uniform(-SPAWN_LIMIT, SPAWN_LIMIT), (ALTURA/2) + random.uniform(-SPAWN_LIMIT, SPAWN_LIMIT)))
         self.nome = nome
         self.personalidade = personalidade
+        self.comida = comida_favoria
+        self.assunto = assunto_favorito
+        self.criador = criador
         self.id = str(uuid.uuid4())
         self.target_vel_x = 0.0
         self.target_vel_y = 0.0
@@ -56,11 +60,18 @@ class Amigo():
         self.img_desc = pygame.transform.scale_by(img, 0.9)
         self.txt_desc_nome = fonte5.render(f"{self.nome}", True, "black").convert_alpha()
         self.txt_desc_pers = fonte6.render(self.personalidade, True, "black").convert_alpha()
+        self.txt_criador = fonte.render(f"Por: {self.criador}", True, "black").convert_alpha()
         
         self.acessorios = {
             "chapeu": None,
             "item": None
         }
+        
+        self.mensagem = None
+        self.message_timer = 0
+        self.frases = []
+        self.frases.extend(mensagens["padrao"])
+
         self.init_personalidade(self.personalidade)
 
     def init_personalidade(self, personalidade):
@@ -75,6 +86,11 @@ class Amigo():
         
         if "RESENHUDO" in personalidade:
             self.cap_lideranca = 1
+
+        for (item, _) in mensagens.items():
+
+            if item in self.personalidade.lower():
+                self.frases.extend(mensagens[item])
 
     def setEstado(self, novo_estado):
         self.state = novo_estado
@@ -178,6 +194,23 @@ class Amigo():
                 inimigos.append((outro, valor))
 
         return amigos, inimigos
+    
+    def gerar_mensagem(self):
+
+        frase = random.choice(self.frases)
+
+        return frase.format(
+            comida=self.comida,
+            assunto=self.assunto,
+            criador=self.criador,
+            nome=self.nome,
+            personalidade=self.personalidade,
+        )
+    
+    def iniciar_mensagem(self):
+        self.mensagem = self.gerar_mensagem()
+        self.message_timer = 0
+        self.setEstado(MESSAGE)
 
     def update(self, amigos, fogueiras):
         
@@ -203,6 +236,9 @@ class Amigo():
                     self.target_pos = self.fogueira_alvo.get_ponto_aleatorio()
 
                     self.setEstado(RESTING)
+
+            elif random.random() < 0.001:
+                self.iniciar_mensagem()
 
             elif self.social_need > 0.6:
                 if random.random() < 0.05:
@@ -430,6 +466,17 @@ class Amigo():
                 self.fogueira_alvo = None
                 self.setEstado(WANDERING)
 
+        if self.state == MESSAGE:
+
+            self.vel_x *= 0.9
+            self.vel_y *= 0.9
+
+            self.message_timer += 1
+
+            if self.message_timer > 180: 
+                self.mensagem = None
+                self.setEstado(WANDERING)
+
         angulo_max = 15
 
         self.angulo = (self.vel_x / MAX_VEL_X) * angulo_max
@@ -450,7 +497,7 @@ class Amigo():
 
         self.rect.x = max(0, min(self.rect.x, LARGURA - self.rect.width))
         self.rect.y = max(0, min(self.rect.y, ALTURA - self.rect.height))
-    
+        
     def draw(self, janela):
 
         img_rot = pygame.transform.rotate(self.img, -self.angulo)
@@ -470,7 +517,40 @@ class Amigo():
             item_rot = pygame.transform.rotate(item, -self.angulo)
             rect_item = item_rot.get_rect(center=(self.rect.centerx + 60, self.rect.centery + self.offset_y))
             janela.blit(item_rot, rect_item)
-        
+        if self.state == MESSAGE and self.mensagem:
+    
+            padding = 10
+            texto = fonte7.render(self.mensagem, True, "black")
+
+            largura = texto.get_width() + padding * 2
+            altura = texto.get_height() + padding * 2
+
+            x = self.rect.centerx - largura // 2
+            y = self.rect.y - 60 + self.offset_y
+
+            balao_rect = pygame.Rect(x, y, largura, altura)
+
+            balao_rect = clamp_rect(balao_rect, LARGURA, ALTURA)
+
+            pygame.draw.rect(janela, (255, 255, 255), balao_rect, border_radius=8)
+            pygame.draw.rect(janela, (0, 0, 0), balao_rect, 2, border_radius=8)
+
+            janela.blit(texto, (balao_rect.x + padding, balao_rect.y + padding))
+
+            ponta_x = self.rect.centerx - 2
+            ponta_y = balao_rect.bottom - 2
+            
+            pygame.draw.polygon(janela, (0, 0, 0), [
+                (ponta_x - 8, ponta_y),
+                (ponta_x + 8, ponta_y),
+                (ponta_x, ponta_y + 13)
+            ])
+            pygame.draw.polygon(janela, (255, 255, 255), [
+                (ponta_x - 5, ponta_y),
+                (ponta_x + 5, ponta_y),
+                (ponta_x, ponta_y + 10)
+            ])
+
         if self.state == FOLLOWING:
             rect_curioso = img_curioso.get_rect(center=(self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
             janela.blit(img_curioso, rect_curioso)
@@ -525,8 +605,10 @@ class Amigo():
         janela.blit(self.txt_desc_nome, (hud_x + 18, 180))
         janela.blit(self.txt_desc_pers, (hud_x + 18, 220))
 
-        self.draw_bar(janela, hud_x + 18, 260, self.energy, "greenyellow")
-        self.draw_bar(janela, hud_x + 18, 320, self.social_need, "dodgerblue3")
+        janela.blit(self.txt_criador, (hud_x + 18, 250))
+        self.draw_bar(janela, hud_x + 18, 315, self.energy, "greenyellow")
+        self.draw_bar(janela, hud_x + 18, 350, self.social_need, "dodgerblue3")
+
         amigos, inimigos = self.get_relacoes_filtradas()
         
         x_base = hud_x + 25

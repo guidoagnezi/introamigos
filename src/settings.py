@@ -26,6 +26,169 @@ GROUPING = "grouping"
 RESTING = "resting"
 GOSSIPING = "gossiping"
 ARGUMENTING = "argumenting"
+MESSAGE = "message"
+
+mensagens = {
+    "padrao": [
+
+        "Eu vou para Pasárgada.",
+        "Café com pão, café com pão, café com pão",
+        "{assunto}. E nunca se esqueça disso.",
+        "{assunto} {assunto} {assunto} sahur.",
+        "Invista todo seu dinheiro em imóveis.",
+        "IntroAmigos nem é tão bom assim.",
+        "Clássico!",
+        "Já booooora.",
+        "Olá!",
+        "Que téééééééédio.",
+        "Você já ouviu falar em {assunto}?.",
+        "Oie!",
+        "Que fome. Quero comer {comida}.",
+        "Nunca desperdice {comida}.",
+        "{assunto} é show de bola.",
+        "{assunto} é o futuro.",
+        "{comida} é o meu prato favorito!",
+        "Você é um amigo, amigo.",
+        "{criador} é bacana.",
+        "{criador}. Que nome familiar.",
+        "Que lindo cenário.",
+        "Bem, estou de mãos atadas.",
+        "Quem disse isso?",
+        "Sou especialista em {assunto}, filho.",
+        "Tome!",
+        "{comida}... {comida}... {comida}!!!",
+        "{criador} é um caboclo sabido.",
+        "Será que {criador} se interessa por {assunto}?",
+        "Será que {criador} já comeu {comida}?",
+        "Atrás de você!",
+        "Vi, vivi e ven... Er... Como era mesmo?",
+        "*Cof cof*",
+        "Todos os direitos reservados.",
+        "Se torne {criador}.",
+        "Todo mundo odeia o Bernardo.",
+        "Todos ignorem o Bernardo.",
+        "IntroAmigos é o jogo mais difícil do mundo.",
+        "Mas que saco...",
+        "int main()... Ops! Linguagem errada.",
+        "A HÁ! Eu não sei ler.",
+        "public class... Opa, tá errado isso.",
+        "Sou particularmente fã de {assunto}",
+        "Você já jogou IntroBattle?",
+        "Algo ameaçador vive no CT 13.",
+        "Que calor.",
+        "Que frio.",
+        "{criador} é o meu fornecedor favorito de {comida}.",
+        "Eu venci.",
+        "Mas eu me recuso.",
+        "Visite o CT 13.",
+        "Visite o stand do IntroComp!",
+        "Imagine.",
+        "Cale-se, cale-se, cale-se.",
+        "Para ser sincero, {assunto} é mais importante que oxigênio.",
+        "Cuidado ao atravessar a Reta da Penha.",
+        "O que você sabe sobre {assunto}?",
+        "É {assunto} ou nada.",
+        "Meu nome é {nome}, é um prazer te conhecer.",
+        "Ser {personalidade} é tão ruim assim?",
+        "{personalidade} é o meu tipo.",
+        "Que pasa contigo?",
+        "É o especialista paiiiiii",
+        "Fala de computador automática.",
+
+        "Tá começando a vazar.",
+
+        "Me chamam de {nome} \"{comida}\" {assunto}",
+        "Fala filhote.",
+        "Fala galera.",
+        "Olá, me chamo {nome}.",
+        "{nome}, gostei desse nome.",
+        "{nome} é?... Você pode repetir?",
+
+        "*assovia e dá um pulo*",
+        ],
+    "psicopata": [
+        "Mal eles sabem...",
+        "Muohohoharhar.",
+        "Urgh...",
+        "Estou rodeado de palhaços.",
+        "Mataria por um pouco de {comida} agora",
+        "*pensamentos maquiavélicos*",
+        "{nome} é um deus!",
+        "Saia de perto de mim.",
+        "Eu sou a única pessoa normal por aqui.",
+        "*assovia olhando pros lados*"
+    ],
+    "resenhudo": [
+        "Bom diiiiiiaaaaa.",
+        "Professor, meu problema é outro.",
+        "O que que há, velhinho?",
+        "{comida} é pica pô, tá maluco?",
+        "Saboooooorrrrrrrr {comida}.",
+    ],
+    "carente": [
+        "Sou tãaaao tristinho...",
+        "Você pode conversar comigo?",
+        "Ei, psiu, eeeiii.",
+        "Alou, tem alguém aí?",
+        "Alguém pra falar de {assunto}, por favor?",
+        "Ei, olha eu aqui!",
+        "Olha o que eu sei fazer.",
+        "Affs.....",
+        "*bufa e olha pra você*"
+    ],
+    "diabolico": [
+        "Nyehehehehe!!",
+        "Estou tramando.",
+        "Hihihihihi",
+        "Psiu, ouve só...",
+        "*pensamentos diabólicos*",
+        "*esfrega as mãos e ri baixinho*",
+    ],
+    "cinico": [
+        "Me dê qualquer tópico. Eu domino.",
+        "Sou jovem, jogo bola e danço.",
+        "Eles têm mais dinheiro que talento.",
+        "Possuo habilidades incríveis que você nem imagina.",
+        "Esse pessoal aí só anda e conversa...",
+        "Eu não tenho {comida} aqui comigo, pede pra outro.",
+        "Me fale um assunto. Dobre e passe pro próximo.",
+        "Falo cerca de 67 idiomas."
+    ],
+    "covarde": [
+        "Errrrrrm....",
+        "Vou nessa.",
+        "Errrr.... Pessoal, acho que isso não é uma boa ideia.",
+        "V-v-você ouviu i-i-i-isso?",
+        "AAAAAAAAHH!!! Ah, não é nada na verdade.",
+        "Você viu aquilo?? *aponta para um atrás de você*",
+        "Eu vou ficar por aqui mesmo...",
+        "Que susto...",
+
+    ],
+    "malandro": [
+        "Ei, você aí, me dá um real.",
+        "Me empresta um dinheiro.",
+        "Abre a boca e fecha os olhos.",
+        "Olha ali!!! *rouba uma unha do seu pé*",
+        "Olha ali!!! *rouba um fio do seu cabelo*",
+        "Olha ali!!! *corre, dá meia volta e finge que nada aconteceu*",
+        "Olha ali!!! *retira a maldição do seu corpo*",
+        "Olha ali!!! *te gira 180 graus*"
+    ],
+
+    "ingenuo": [
+
+        "Hã? Alguém disse alguma coisa?",
+        "Uuuuhhhh...",
+        "Aqui tem 100 reais, me devolve depois.",
+        "Haha.... Isso é muito verdade."
+    ],
+
+
+
+}
+
+
 # Temporizadores
 
 WANDER_TIME = 120
@@ -62,3 +225,4 @@ fonte3 = pygame.font.Font("fonte/guidofontenasal.ttf", 30)
 fonte4 = pygame.font.Font("fonte/guidofontenasal.ttf", 20)
 fonte5 = pygame.font.SysFont(None, 48)
 fonte6 = pygame.font.Font("fonte/guidofontenasal.ttf", 12)
+fonte7 = pygame.font.SysFont(None, 30)

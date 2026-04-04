@@ -26,7 +26,6 @@ class SaveFile:
 
             pygame.image.save(amigo.img, caminho_img)
 
-            # 🔁 converte relacoes
             relacoes = {
                 outro.id: valor
                 for outro, valor in amigo.relacoes.items()
@@ -42,7 +41,10 @@ class SaveFile:
                 "energy": amigo.energy,
                 "social_need": amigo.social_need,
                 "relacoes": relacoes,
-                "imagem": nome_img
+                "imagem": nome_img,
+                "comida": amigo.comida,
+                "assunto": amigo.assunto,
+                "criador": amigo.criador,
             })
 
         with open(os.path.join(self.caminho, "save.json"), "w") as f:
@@ -61,7 +63,7 @@ class SaveFile:
             caminho_img = os.path.join(self.caminho, a["imagem"])
             img = pygame.image.load(caminho_img).convert_alpha()
 
-            amigo = Amigo(img, a["nome"], a["personalidade"])
+            amigo = Amigo(img, a["nome"], a["personalidade"], a["comida"], a["assunto"], a["criador"])
 
             amigo.id = a["id"]
             amigo.rect.x = a["x"]

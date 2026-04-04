@@ -216,7 +216,7 @@ class CenaAcampamento:
         if not self.evento_atual and random.random() < 0.0005:
             self.evento_atual = random.choice(self.lista_eventos)
             self.evento_atual.iniciar(self.sprite_group_amigo)
-        # atualizar evento
+
         if self.evento_atual:
             self.evento_atual.update(self.sprite_group_amigo)
 
@@ -224,7 +224,6 @@ class CenaAcampamento:
                 self.evento_atual = None            
     def draw(self, janela):
             
-
             self.sprite_group_general.sort(key= lambda obj: obj.rect.y + obj.rect.height)
             
             janela.fill("white")
@@ -285,8 +284,8 @@ class CenaCriadorAmigo:
         self.img_titulo = pygame.image.load("fundo/titulo_criador.png").convert_alpha()
         self.rect_titulo = self.img_titulo.get_rect(topleft=(10,20))
 
-        self.img_personalidade = pygame.image.load("fundo/titulo_personalidade.png").convert_alpha()
-        self.rect_personalidade = self.img_titulo.get_rect(topleft=(self.margem_esquerda, 600))
+        # self.img_personalidade = pygame.image.load("fundo/titulo_personalidade.png").convert_alpha()
+        # self.rect_personalidade = self.img_titulo.get_rect(topleft=(self.margem_esquerda, 600))
 
         self.img_botao_confirmar = pygame.image.load("fundo/confirmar_frame.png").convert_alpha()
         self.img_botao_carregar = pygame.image.load("fundo/carregar_frame.png").convert_alpha()
@@ -307,10 +306,12 @@ class CenaCriadorAmigo:
         # janela.blit(self.txt_coisa self.rect_txt_coisa)
     def criar_input_box(self):
         self.input_box = InputBox(LARGURA - 240, 460, 180, 40, tamanho_fonte=40)
-        self.inputb_comida = InputBox(LARGURA - 804, 285, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
-        self.inputb_coisa = InputBox(LARGURA - 804, 385, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
-        self.inputb_nome_do_criador = InputBox(LARGURA - 804, 485, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
-        self.sprite_group_inputb = [self.input_box, self.inputb_comida, self.inputb_coisa, self.inputb_nome_do_criador]
+        self.sprite_group_inputb = [self.input_box] 
+        if LARGURA >= 1424:
+            self.inputb_comida = InputBox(LARGURA - 804, 285, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
+            self.inputb_coisa = InputBox(LARGURA - 804, 385, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
+            self.inputb_nome_do_criador = InputBox(LARGURA - 804, 485, 360, 40, tamanho_fonte=40, tamanho_max_texto=21)
+            self.sprite_group_inputb.extend([self.inputb_comida, self.inputb_coisa, self.inputb_nome_do_criador])
 
     def criar_botoes(self):
 
@@ -353,7 +354,13 @@ class CenaCriadorAmigo:
     def criar_amigo(self):
         if self.imagem_temp:
             img = self.imagem_temp
-            novo_amigo = Amigo(img, self.input_box.texto, self.personalidade)
+            novo_amigo = Amigo(img, self.input_box.texto,
+                                self.personalidade, 
+                                self.inputb_comida.texto, 
+                                self.inputb_coisa.texto, 
+                                self.inputb_nome_do_criador.texto)
+            
+            novo_amigo.iniciar_mensagem()
             self.cena_acamp.adiciona_amigo(novo_amigo)
             self.game.setCena(self.cena_acamp)
     
@@ -491,22 +498,22 @@ class CenaCriadorAmigo:
         rect_txt_pt_rest = txt_pt_rest.get_rect(topleft=(self.margem_esquerda, 140))
 
         txt_personalidade_amigo = fonte2.render(self.personalidade, True, "black").convert_alpha()
-        rect_txt_personalidade_amigo = txt_personalidade_amigo.get_rect(topleft=(self.margem_esquerda, 680))
+        rect_txt_personalidade_amigo = txt_personalidade_amigo.get_rect(center=(270, 615))
 
         if self.imagem_temp:
             rect = self.imagem_temp_quadro.get_rect(center=self.rect_quadro.center)
             janela.blit(self.imagem_temp_quadro, rect)
         
         janela.blit(self.txt_nome, self.rect_txt_nome)
-        janela.blit(self.txt_comida, self.rect_txt_comida)
-        janela.blit(self.txt_coisa, self.rect_txt_coisa)
-        janela.blit(self.txt_criador, self.rect_txt_criador)
+        if LARGURA >= 1424:
+            janela.blit(self.txt_comida, self.rect_txt_comida)
+            janela.blit(self.txt_coisa, self.rect_txt_coisa)
+            janela.blit(self.txt_criador, self.rect_txt_criador)
 
         janela.blit(self.img_quadro_img_temp, self.rect_quadro)
         janela.blit(self.img_titulo, self.rect_titulo)
 
         janela.blit(txt_pt_rest, rect_txt_pt_rest)
-        janela.blit(self.img_personalidade, self.rect_personalidade)
 
         janela.blit(txt_personalidade_amigo, rect_txt_personalidade_amigo)
         for slider in self.sprite_group_slider:
