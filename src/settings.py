@@ -65,8 +65,6 @@ mensagens = {
         "*Cof cof*",
         "Todos os direitos reservados.",
         "Se torne {criador}.",
-        "Todo mundo odeia o Bernardo.",
-        "Todos ignorem o Bernardo.",
         "IntroAmigos é o jogo mais difícil do mundo.",
         "Mas que saco...",
         "int main()... Ops! Linguagem errada.",
@@ -94,17 +92,31 @@ mensagens = {
         "Que pasa contigo?",
         "É o especialista paiiiiii",
         "Fala de computador automática.",
-
         "Tá começando a vazar.",
-
         "Me chamam de {nome} \"{comida}\" {assunto}",
         "Fala filhote.",
         "Fala galera.",
         "Olá, me chamo {nome}.",
         "{nome}, gostei desse nome.",
         "{nome} é?... Você pode repetir?",
-
         "*assovia e dá um pulo*",
+        "Tenha respeito por {assunto}, amigo.",
+        "*gira 2 vezes e pisca o olhos*",
+        "*começa a se coçar inteiro*",
+        "{amigo} é um caboclo bacana",
+        "Será que {amigo} se interessa por {assunto}?",
+        "Eu e {amigo} vamos andar aleatóriamente por aí.",
+        "Quero dividir {comida} com {amigo}.",
+        "Você viu o que {inimigo} fez?",
+        "{inimigo} é um BABACA MALDITO.",
+        "Espero que {amigo} nunca caia nas garras de {inimigo}.",
+        "Bizarro. {inimigo} não sabe nada de {assunto}.",
+        "{inimigo} é um pulga de bunda.",
+        "Falando sério. Felbs Chelbs Lelbs.",
+        "{amigo}nelson.",
+        "Será que {amigo} já comeu {comida}?",
+        "Certeza que {inimigo} nunca nem comeu {comida}.",
+
         ],
     "psicopata": [
         "Mal eles sabem...",
@@ -116,7 +128,9 @@ mensagens = {
         "{nome} é um deus!",
         "Saia de perto de mim.",
         "Eu sou a única pessoa normal por aqui.",
-        "*assovia olhando pros lados*"
+        "*assovia olhando pros lados*",
+        "Entre em pânico e venda todos os seus bens.",
+        "{inimigo} terá um destino pior que a morte."
     ],
     "resenhudo": [
         "Bom diiiiiiaaaaa.",
@@ -124,6 +138,7 @@ mensagens = {
         "O que que há, velhinho?",
         "{comida} é pica pô, tá maluco?",
         "Saboooooorrrrrrrr {comida}.",
+        "{amigo} é o taaaaaaaaal rapeize."
     ],
     "carente": [
         "Sou tãaaao tristinho...",

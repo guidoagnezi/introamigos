@@ -37,7 +37,7 @@ class Amigo():
         self.energy = 1
         self.social_need = 0
 
-        self.energy_consumption = random.uniform(0.00015, 0.00035) 
+        self.energy_consumption = random.uniform(0.00005, 0.00012) 
         self.social_need_gain = 0.0007
         
         self.step_timer = 0
@@ -195,9 +195,18 @@ class Amigo():
 
         return amigos, inimigos
     
-    def gerar_mensagem(self):
+    def gerar_mensagem(self, amigos):
 
         frase = random.choice(self.frases)
+
+        proximos = self.perceber_amigos(amigos)
+        nomes_proximos = [a.nome for a, _ in proximos]
+
+        amigo_nome = random.choice(nomes_proximos) if nomes_proximos else "alguém"
+
+        inimigos = [a.nome for a, v in self.relacoes.items() if v < 0]
+        inimigo_nome = random.choice(inimigos) if inimigos else "fulano"
+
 
         return frase.format(
             comida=self.comida,
@@ -205,10 +214,12 @@ class Amigo():
             criador=self.criador,
             nome=self.nome,
             personalidade=self.personalidade,
+            amigo=amigo_nome,
+            inimigo=inimigo_nome
         )
     
-    def iniciar_mensagem(self):
-        self.mensagem = self.gerar_mensagem()
+    def iniciar_mensagem(self, amigos):
+        self.mensagem = self.gerar_mensagem(amigos)
         self.message_timer = 0
         self.setEstado(MESSAGE)
 
@@ -238,7 +249,7 @@ class Amigo():
                     self.setEstado(RESTING)
 
             elif random.random() < 0.001:
-                self.iniciar_mensagem()
+                self.iniciar_mensagem(amigos)
 
             elif self.social_need > 0.6:
                 if random.random() < 0.05:
@@ -265,7 +276,7 @@ class Amigo():
             relacao = self.relacoes.get(self.alvo_social, 0)
 
             if relacao > 0:
-                if random.random() < 0.3 and self.social_need > 0.8: 
+                if random.random() < 0.05 and self.social_need > 0.8: 
                     lider, seguidor = self.definir_lider(self.alvo_social)
 
                     lider.is_lider = True
@@ -277,7 +288,7 @@ class Amigo():
                     lider.setEstado(GROUPING)
                     seguidor.setEstado(GROUPING)
 
-            elif relacao <= -2 and random.random() < 0.4:
+            elif relacao <= -2 and random.random() < 0.1:
                 self.setEstado(AVOIDING)
                 print(f"{self.nome} decidiu evitar")
 
@@ -477,6 +488,12 @@ class Amigo():
                 self.mensagem = None
                 self.setEstado(WANDERING)
 
+        # if self.rect.bottom > ALTURA - 100 and self.target_vel_y > 0:
+        #     self.target_vel_y = abs(self.target_vel_y)
+        
+        # if self.rect.top < 100 and self.target_vel_y < 0:
+        #     self.target_vel_y *= -1
+
         angulo_max = 15
 
         self.angulo = (self.vel_x / MAX_VEL_X) * angulo_max
@@ -520,7 +537,7 @@ class Amigo():
         if self.state == MESSAGE and self.mensagem:
     
             padding = 10
-            texto = fonte7.render(self.mensagem, True, "black")
+            texto = fonte5.render(self.mensagem, True, "black")
 
             largura = texto.get_width() + padding * 2
             altura = texto.get_height() + padding * 2
@@ -530,7 +547,7 @@ class Amigo():
 
             balao_rect = pygame.Rect(x, y, largura, altura)
 
-            balao_rect = clamp_rect(balao_rect, LARGURA, ALTURA)
+            balao_rect = clamp_rect(balao_rect, LARGURA, ALTURA, 40)
 
             pygame.draw.rect(janela, (255, 255, 255), balao_rect, border_radius=8)
             pygame.draw.rect(janela, (0, 0, 0), balao_rect, 2, border_radius=8)

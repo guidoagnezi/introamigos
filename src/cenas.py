@@ -52,7 +52,13 @@ class CenaAcampamento:
 
         self.img_chapeu = pygame.image.load("amigo/bowler.png").convert_alpha()
         self.img_xicara = pygame.image.load("amigo/xicara.png").convert_alpha()
-    
+
+        self.festa0 = pygame.image.load("amigo/festa0.png")
+        self.festa1 = pygame.image.load("amigo/festa1.png")
+        self.festa2 = pygame.image.load("amigo/festa2.png")
+
+        self.c_festa = [self.festa0, self.festa1, self.festa2]
+        
     def criar_botoes(self):
         self.botao_confirmar = Botao(LARGURA/2 - self.img_botao_confirmar.get_width()/2, ALTURA - 80, self.img_botao_confirmar, "CRIAR AMIGO", self.cena_criacao)
         self.botao_save = Botao(5, 5, self.img_save, "", self.salvar_jogo)
@@ -61,6 +67,23 @@ class CenaAcampamento:
         self.botoes = [self.botao_confirmar, self.botao_save, self.botao_quit]
 
     def criar_eventos(self):
+        
+        def inicio_aniversario(amigos):
+            for a in amigos:
+                a.setAcessorio("chapeu", random.choice(self.c_festa))
+        
+        def update_aniversario(amigos):
+            for a in amigos:
+                a.social_need -= 0.001
+                a.energy += 0.001
+
+        def fim_aniversario(amigos):
+            for a in amigos:
+                a.removeAcessorios()
+        
+        evento_aniversario = EventoGlobal("aniversario", 600, inicio_aniversario, update_aniversario, fim_aniversario)
+
+        self.lista_eventos.append(evento_aniversario)
 
         def inicio_cha(amigos):
             for a in amigos:
@@ -95,7 +118,7 @@ class CenaAcampamento:
 
         evento_soneca = EventoGlobal("hora da soneca", 500, inicio_soneca, update_soneca, fim_soneca)
 
-        #self.lista_eventos.append(evento_soneca)
+        self.lista_eventos.append(evento_soneca)
 
         def inicio_lig(amigo, game=self.game):
             game.fps = 120
@@ -116,9 +139,10 @@ class CenaAcampamento:
         self.sprite_group_general.append(arbusto)
     def criar_fogueiras(self):
 
-        f = Fogueira(LARGURA/2, ALTURA/2)
+        f = Fogueira(LARGURA/4, ALTURA/2)
         self.fogueiras.append(f)
         self.sprite_group_general.append(f)
+        
     def criar_arvores(self):
 
         a = Arvore(pygame.image.load("fundo/arvore.png").convert_alpha(), LARGURA - 250, ALTURA - 600)
@@ -245,10 +269,6 @@ class CenaAcampamento:
             
             for b in self.botoes:
                 b.draw(janela)
-
-            fps = self.game.clock.get_fps()
-            txt_fps = fonte.render(f"{fps}", True, "black")
-            janela.blit(txt_fps, (150, 10))
 
             pygame.display.update()
 

@@ -3,8 +3,7 @@ from settings import *
 from amigo import *
 from cenario import *
 from cenas import *
-import tkinter as tk
-from tkinter.filedialog import askopenfilename
+
 
  
 class Game():
