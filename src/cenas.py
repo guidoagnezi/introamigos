@@ -380,7 +380,6 @@ class CenaCriadorAmigo:
                                 self.inputb_coisa.texto, 
                                 self.inputb_nome_do_criador.texto)
             
-            novo_amigo.iniciar_mensagem()
             self.cena_acamp.adiciona_amigo(novo_amigo)
             self.game.setCena(self.cena_acamp)
     

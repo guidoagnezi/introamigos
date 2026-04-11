@@ -525,7 +525,7 @@ class Amigo():
         # janela.blit(fonte.render(self.state, True, "black"), (self.rect.x + self.rect.width / 2, self.rect.y - 40 + self.offset_y))
         if self.acessorios["chapeu"]:
             chapeu = self.acessorios["chapeu"]
-            chapeu_rot = pygame.transform.rotate(chapeu, -self.angulo)
+            chapeu_rot = pygame.transform.rotate(chapeu, self.angulo)
             rect_chapeu = chapeu_rot.get_rect(midbottom=(self.rect.centerx, self.rect.y + self.offset_y + 30))
             janela.blit(chapeu_rot, rect_chapeu)
 
