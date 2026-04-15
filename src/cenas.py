@@ -11,6 +11,7 @@ from fogueira import *
 from arvore import *
 from saveFile import *
 from eventoGlobal import *
+
 class CenaAcampamento:
     def __init__(self, game):
         self.game = game
@@ -374,6 +375,7 @@ class CenaCriadorAmigo:
     def criar_amigo(self):
         if self.imagem_temp:
             img = self.imagem_temp
+            img = pygame.transform.scale(img, (150, 150))
             novo_amigo = Amigo(img, self.input_box.texto,
                                 self.personalidade, 
                                 self.inputb_comida.texto, 
@@ -456,16 +458,13 @@ class CenaCriadorAmigo:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_TAB:
-                # desativa atual
+
                 self.sprite_group_inputb[self.input_ativo_index].ativo = False
                 
-                # próximo índice (com loop)
                 self.input_ativo_index = (self.input_ativo_index + 1) % len(self.sprite_group_inputb)
                 
-                # ativa próxima
                 self.sprite_group_inputb[self.input_ativo_index].ativo = True
-                
-                # atualiza cor visual
+
                 for ib in self.sprite_group_inputb:
                     ib.cor = ib.cor_ativa if ib.ativo else ib.cor_inativa
                 

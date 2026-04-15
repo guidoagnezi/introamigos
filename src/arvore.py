@@ -87,7 +87,7 @@ class Arvore:
         img_rot = pygame.transform.rotate(self.img, self.angulo)
 
         if self.transparente:
-            img_rot.set_alpha(230)
+            img_rot.set_alpha(110)
         else:
             img_rot.set_alpha(255)
 
